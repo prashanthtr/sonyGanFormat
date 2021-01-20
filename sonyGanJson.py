@@ -14,60 +14,71 @@ import math
 import pdb
 
 class SonyGanJson():
-	def __init__(self, src, sr) :
-		self.src = src:  # dataset type: 0 or "natural" and 1 or "artificial".
+	def __init__(self, filePath, src, sr, soundSource):
+		self.filePath = filePath
+		self.soundSource = soundSource
 		if src == "natural" or src == 0:
-			self.src_string = "Natural"
+			self.srcType_string = "Natural"
+			self.srcType = 0  # dataset type: 0 or "natural" and 1 or "artificial".
 		elif src == "generated" or src == 1:
-			self.src_string = "Generated"
+			self.srcType_string = "Generated"
+			self.srcType = 1  # dataset type: 0 or "natural" and 1 or "artificial".
 		else:
-			self.src_string = "Undecided"
+			self.srcType_string = "Undecided"
+			self.srcType = 2  # dataset type: 0 or "natural" and 1 or "artificial".
 		self.sr = sr
 		self.fileList =  []
 		self.SGjson = {}
+		self.readAll()
 
-	def read():
+	def readOne(self):
 		#Reads single Files and stores metaParams
+		print("read single files")
 
-	def readAll(paramPath):
+	def readAll(self):
 		# Reads all files in a folder
-		fileList = [f for f in os.listdir(parampath) if '.wav' in f]
+		fileList = [f for f in os.listdir(self.filePath) if '.wav' in f]
 		self.fileList = fileList
+		self.storeRecords()
 
-	def storeRecords():
+	'''Stores records for all the files in the given directory'''
+	def storeRecords(self):
 
 		for filename in self.fileList:
 		    sgrecord = {}
-		    fileArr = os.path.splitext(filename)[0].split("-")
+		    fileArr = os.path.splitext(filename)[0].split("--")
 		    sgrecord["sound_name"] = filename
 
 		    for x in range(1, len(fileArr)-1):
-		        pName = fileArr[x].split(":")[0]
-		        print(pName+"natural")
-		        normVal = float(fileArr[x].split(":")[1])
+		        pName = fileArr[x].split("-")[0]
+		        print(pName)
+		        normVal = float(fileArr[x].split("-")[1])
 		        sgrecord[pName+"_norm"] = float(normVal); #unique string with parameters
-		        if pName == "cf_exp":
+		        if pName == "cf":
 		            sgrecord[pName+"_natural"] = 440*np.power(2,normVal)
 		            sgrecord["midi_num"] = freq2Midi(440*np.power(2,normVal))
-		        elif pName == "rate_exp":
+		        elif pName == "rate":
 		            sgrecord[pName+"_natural"]=np.power(2,normVal)
-		        else:
+		        elif pName == "irreg":
 		        	sgrecord[pName+"_natural"] = .04*np.power(10,normVal)
+		        else:
+		        	print("unrecognized param")
 
-		    sgrecord["segment_number"] = fileArr[len(fileArr)-1].split(":")[1]
+		    sgrecord["segment_number"] = fileArr[len(fileArr)-1].split("-")[1]
 		    sgrecord["sound_name"] = fileArr[0]	
 		    sgrecord["samplerate"] = self.sr; 
-		    sgrecord["sound_source"] = self.dsType; #0 natural, 1 generated
-		    sgrecord["sound_source_str"] = "generated"
-		    sgrecord["sound_source_src"] = "https://github.com/prashanthtr/popTextureDS"
+		    sgrecord["sound_source_int"] = self.srcType; #0 natural, 1 generated
+		    sgrecord["sound_source_str"] = self.srcType_string
+		    sgrecord["sound_source"] = self.soundSource
 		    self.SGjson[filename]=sgrecord
 
-	def ppRecords():
+	def ppRecords(self):
 		print(json.dumps(self.SGjson, indent=4, sort_keys=True))
 
-	def write2File():
-		with open('sonyGan.json', 'w') as outfile:
+	def write2File(self,filename):
+		with open(filename, 'w') as outfile:
 			json.dump(self.SGjson, outfile, indent=4, sort_keys=True)
+		print("written output to ", filename)
 
 # Freq to MIdi for datasets with center frequency
 def freq2Midi(freq):
