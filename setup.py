@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(
-    name='sonyGanJson',
+    name='sonyGanFormat',
     version='0.1dev',
     py_modules=['sonyGanJson'],
     license='Creative Commons Attribution-Noncommercial-Share Alike license',
