@@ -72,6 +72,26 @@ class SonyGanJson():
 		    sgrecord["sound_source"] = self.soundSource
 		    self.SGjson[filename]=sgrecord
 
+	''' Stores records one at a time'''
+	def storeSingleRecord(self,filename):
+	    sgrecord = {}
+	    sgrecord["sound_name"] = filename
+		sgrecord["sound_name"] = fileArr[0]	
+	    fileArr = os.path.splitext(filename)[0].split("--")
+	    sgrecord["samplerate"] = self.sr; 
+	    sgrecord["sound_source_int"] = self.srcType; #0 natural, 1 generated
+	    sgrecord["sound_source_str"] = self.srcType_string
+	    sgrecord["sound_source"] = self.soundSource
+	    self.SGjson[filename]=sgrecord
+
+	def addParams(self,filename,pName, normVal, naturalVal):
+	    sgrecord = self.SGjson[filename]
+        sgrecord[pName+"_norm"] = float(normVal); #unique string with parameters
+        sgrecord[pName+"_natural"] = float(naturalVal)		
+	    if pName == "cf":
+            sgrecord["midi_num"] = freq2Midi(naturalVal)
+		self.SGjson[filename]=sgrecord
+
 	def ppRecords(self):
 		print(json.dumps(self.SGjson, indent=4, sort_keys=True))
 
