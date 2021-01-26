@@ -49,20 +49,20 @@ class SonyGanJson():
 		    fileArr = os.path.splitext(filename)[0].split("--")
 		    sgrecord["sound_name"] = filename
 
-		    for x in range(1, len(fileArr)-1):
-		        pName = fileArr[x].split("-")[0]
-		        print(pName)
-		        normVal = float(fileArr[x].split("-")[1])
-		        sgrecord[pName+"_norm"] = float(normVal); #unique string with parameters
-		        if pName == "cf":
-		            sgrecord[pName+"_natural"] = 440*np.power(2,normVal)
-		            sgrecord["midi_num"] = freq2Midi(440*np.power(2,normVal))
-		        elif pName == "rate":
-		            sgrecord[pName+"_natural"]=np.power(2,normVal)
-		        elif pName == "irreg":
-		        	sgrecord[pName+"_natural"] = .04*np.power(10,normVal)
-		        else:
-		        	print("unrecognized param")
+		    # for x in range(1, len(fileArr)-1):
+		    #     pName = fileArr[x].split("-")[0]
+		    #     print(pName)
+		    #     normVal = float(fileArr[x].split("-")[1])
+		    #     sgrecord[pName+"_norm"] = float(normVal); #unique string with parameters
+		    #     if pName == "cf":
+		    #         sgrecord[pName+"_natural"] = 440*np.power(2,normVal)
+		    #         sgrecord["midi_num"] = freq2Midi(440*np.power(2,normVal))
+		    #     elif pName == "rate":
+		    #         sgrecord[pName+"_natural"]=np.power(2,normVal)
+		    #     elif pName == "irreg":
+		    #     	sgrecord[pName+"_natural"] = .04*np.power(10,normVal)
+		    #     else:
+		    #     	print("unrecognized param")
 
 		    sgrecord["segment_number"] = fileArr[len(fileArr)-1].split("-")[1]
 		    sgrecord["sound_name"] = fileArr[0]	
