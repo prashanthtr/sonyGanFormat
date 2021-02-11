@@ -14,8 +14,9 @@ import math
 import pdb
 
 class SonyGanJson():
-	def __init__(self, filePath, src, sr, soundSource):
+	def __init__(self, filePath, outPath, src, sr, soundSource):
 		self.filePath = filePath
+		self.outPath = outPath
 		self.soundSource = soundSource
 		if src == "natural" or src == 0:
 			self.srcType_string = "Natural"
@@ -99,7 +100,7 @@ class SonyGanJson():
 		print(json.dumps(self.SGjson, indent=4, sort_keys=True))
 
 	def write2File(self,filename):
-		with open(filename, 'w') as outfile:
+		with open(os.path.join(self.outPath,filename), 'w') as outfile:
 			json.dump(self.SGjson, outfile, indent=4, sort_keys=True)
 		print("written output to ", filename)
 
